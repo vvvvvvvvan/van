@@ -1,5 +1,9 @@
 ## 一对大学生情侣写的网页
 ## 网址是[www.love-wgsm.xin](http://www.love-wgsm.xin)
 ### aqqd是爱情清单
-###
-### 希望能帮到你
+### dddd是点点滴滴
+### gywm是关于我们
+### index是网站主网页
+### jnjl是纪念记录
+### qszq是情书专区
+### sgxc是时光相册
