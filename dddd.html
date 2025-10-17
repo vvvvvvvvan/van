@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <title>点点滴滴 - van和smader的爱情小屋</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      min-height: 100vh;
+      font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+      overflow-x: hidden;
+      background: #a9e3fe url('blue-bg.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+    .main-content {
+      margin-top: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100vw;
+    }
+    .main-box {
+      background: rgba(255,255,255,0.92);
+      box-shadow: 0 4px 16px rgba(84,179,250,0.14);
+      border-radius: 20px;
+      padding: 34px 0 22px 0;
+      text-align: center;
+      z-index: 5;
+      margin-bottom: 38px;
+      width: 50vw;
+      min-width: 300px;
+      max-width: 480px;
+      border: 1.5px solid #a6d6fc;
+    }
+    .timeline {
+      margin: 38px auto 30px auto;
+      width: 92vw;
+      max-width: 670px;
+      position: relative;
+      padding-left: 10px;
+      padding-top: 45px;  /* 新增或调整这个值，适当即可 */
+      /* 新增内容如下 ↓↓↓ */
+      max-height: 540px;   /* 你可以自定义高度，比如500px/600px都可以 */
+      overflow-y: auto;
+      background: rgba(255,255,255,0.79); /* 可以加一点淡背景，和外面区分开 */
+      border-radius: 14px;  /* 让边框圆润一点 */
+      border: 1px solid #a6d6fc;
+      box-shadow: 0 2px 12px rgba(84,179,250,0.08);
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 28px;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom, #a9e3fe 10%, #2196f3 80%);
+      border-radius: 2px;
+      z-index: 1;
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 44px;
+      display: flex;
+      align-items: flex-start;
+    }
+    .timeline-dot {
+      width: 18px; height: 18px;
+      background: #1976d2;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      box-shadow: 0 2px 10px rgba(33,150,243,0.11);
+      position: relative;
+      left: 19px; z-index: 2;
+      margin-right: 22px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .timeline-content {
+      background: rgba(255,255,255,0.88);
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(84,179,250,0.09);
+      padding: 14px 22px 12px 18px;
+      min-width: 0;
+      max-width: 480px;
+      flex: 1;
+      border-left: 3px solid #2196f3;
+      text-align: left;
+      position: relative;
+    }
+    .timeline-date {
+      font-size: 1.05em;
+      color: #3171c9;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+    .timeline-text {
+      font-size: 1.18em;
+      color: #1e2c4d;
+      word-break: break-all;
+    }
+    .back-home {
+      display: inline-block;
+      margin-top: 24px;
+      color: #2196f3;
+      background: rgba(255,255,255,0.86);
+      padding: 6px 24px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-size: 1.15em;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(84,179,250,0.08);
+      transition: background 0.18s;
+    }
+    .back-home:hover {
+      background: #e6f5ff;
+    }
+    @media (max-width: 900px) {
+      .main-box { width: 80vw; }
+      .timeline { width: 98vw; }
+    }
+    @media (max-width: 600px) {
+      .main-box { width: 95vw; min-width: 0; padding: 18px 0 10px 0;}
+      .timeline { max-width: 99vw; }
+      .timeline-content { padding: 11px 10px 9px 11px;}
+    }
+    #sakuraCanvas {
+    position: fixed;
+    left: 0; top: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 10;
+}
+.timeline-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 2px;
+  margin-top: 0;
+}
+
+.avatar-mini {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(33,150,243,0.10);
+  border: 2px solid #fff;
+  background: #fff;
+}
+
+.timeline-title-text {
+  color: #2196f3;
+  font-size: 1.4em;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+  </style>
+</head>
+<body>
+  <canvas id="sakuraCanvas"></canvas>
+  <div class="main-content">
+    <div class="main-box">
+      <div class="timeline-title-row">
+    <img class="avatar-mini" src="A62A07FD46CF3AE4F9EA92855966E5E7.jpg" alt="van头像">
+    <span class="timeline-title-text">点点滴滴 · 时间轴</span>
+    <img class="avatar-mini" src="F0EA2A563C8A66514D51753ADA28B318.jpg" alt="smader头像">
+</div>
+
+      <div style="color:#3171c9;font-size:1em;margin-top:7px;">
+        记录我们的每个小瞬间
+      </div>
+    </div>
+    <div class="timeline">
+
+      <!-- 时间轴条目开始 -->
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2023.9.29</div>
+          <div class="timeline-text">在bld第一次见面呢</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2023.10.21</div>
+          <div class="timeline-text">smader在辩论赛上完美发挥!!</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2023.11.15</div>
+          <div class="timeline-text">第一次单独约饭</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2023.12.7</div>
+          <div class="timeline-text">第一次约会——看电影《拿破仑》</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2023.12.16</div>
+          <div class="timeline-text">送给van的第一幅画《小王子和玫瑰》</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2023.12.17</div>
+          <div class="timeline-text">收到了第一束白玫瑰（红玫瑰！！！）</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2023.12.25</div>
+          <div class="timeline-text">收到圣诞节礼物——一瓶粉色GUCCI香水</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2023.12.29</div>
+          <div class="timeline-text">第一次小酌rio</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2023.12.29</div>
+          <div class="timeline-text">通宵海边散步</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2023.12.30</div>
+          <div class="timeline-text">看海上日出</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2023.12.31</div>
+          <div class="timeline-text">第一次跨年——看电影《一闪一闪亮星星》+ ps5</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.1.1</div>
+          <div class="timeline-text">第一次吃百万万的汉堡</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.1.5</div>
+          <div class="timeline-text">我们一起听了999分钟的歌</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.1.6</div>
+          <div class="timeline-text">第一次接吻</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.1.10</div>
+          <div class="timeline-text">再看《一闪一闪亮星星》</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.1.11</div>
+          <div class="timeline-text">凌晨海边烧烤</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2021.1.11</div>
+          <div class="timeline-text">集美学村一日游</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.1.12</div>
+          <div class="timeline-text">味太助！</div>
+        </div>
+      </div> 
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.1.20</div>
+          <div class="timeline-text">收到van送的生日礼物——四叶草手链</div>
+        </div>
+      </div> 
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.2.10</div>
+          <div class="timeline-text">第一次一起打电话过年</div>
+        </div>
+      </div> 
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.2.29</div>
+          <div class="timeline-text">28年一遇的疯狂星期四</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.3.2</div>
+          <div class="timeline-text">一次普通的海边散步之旅——海景咖啡店</div>
+        </div>
+      </div> 
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.3.30</div>
+          <div class="timeline-text">UR换装小游戏</div>
+        </div>
+      </div> 
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.3.31</div>
+          <div class="timeline-text">又是味太助！</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.4.3</div>
+          <div class="timeline-text">环岛骑行</div>
+        </div>
+      </div> 
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.4.10</div>
+          <div class="timeline-text">照片拼图，超级好看的！</div>
+        </div>
+      </div> 
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.4.22</div>
+          <div class="timeline-text">van生日——超贵饭和看到视频的哭哭van</div>
+        </div>
+      </div> 
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.5.18</div>
+          <div class="timeline-text">方特水上乐园之旅</div>
+        </div>
+      </div> 
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.6.2</div>
+          <div class="timeline-text">深夜食堂小酌</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.6.26</div>
+          <div class="timeline-text">石膏娃娃！</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.7.15</div>
+          <div class="timeline-text">van从香港给我带礼物回来啦</div>
+        </div>
+      </div> 
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.9.9</div>
+          <div class="timeline-text">通往夏天的隧道，再见的出口！</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.9.22</div>
+          <div class="timeline-text">超级好吃的蛙锅</div>
+        </div>
+      </div> 
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.9.24</div>
+          <div class="timeline-text">一起打高尔夫</div>
+        </div>
+      </div> 
+      
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.10.5</div>
+          <div class="timeline-text">一束超级丑超级丑的粉玫瑰！！！</div>
+        </div>
+      </div> 
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2024.11.1</div>
+          <div class="timeline-text">方特万圣节之旅</div>
+        </div>
+      </div> 
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2025.2.12-15</div>
+          <div class="timeline-text">武汉之旅</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2025.3.2</div>
+          <div class="timeline-text">第一次一起打台球</div>
+        </div>
+      </div> 
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2025.3.8</div>
+          <div class="timeline-text">鼓浪屿下午漫步</div>
+        </div>
+      </div> 
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2025.3.31</div>
+          <div class="timeline-text">网吧！瓦！</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2025.4.22</div>
+          <div class="timeline-text">宝宝生日——海底捞社死宝宝</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2025.5.10</div>
+          <div class="timeline-text">手工情侣对戒</div>
+        </div>
+      </div> 
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2025.5.11</div>
+          <div class="timeline-text">是520天纪念日</div>
+        </div>
+      </div>
+       <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2025.5.16</div>
+          <div class="timeline-text">出发！山海步道</div>
+        </div>
+      </div> 
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">2025.6.20</div>
+          <div class="timeline-text">见到姐姐啦，然后一起去看了超美的大海和天空</div>
+        </div>
+     
+      <!-- 时间轴条目结束 -->
+
+    </div>
+    
+  </div>
+  <a class="back-home" href="./index.html">返回首页</a>
+  <script>
+  // Sakura 蓝白花瓣飘落
+  const canvas = document.getElementById('sakuraCanvas');
+  let width = window.innerWidth, height = window.innerHeight;
+  canvas.width = width; canvas.height = height;
+  function random(min, max) { return Math.random() * (max - min) + min; }
+  class Sakura {
+    constructor() { this.reset(); }
+    reset() {
+      this.x = random(0, width);
+      this.y = random(-50, height * 0.6);
+      this.r = random(6, 14);
+      this.angle = random(0, Math.PI * 2);
+      this.speed = random(1.1, 2.1);
+      this.rotateSpeed = random(0.007, 0.017);
+      this.opacity = random(0.6, 0.9);
+      this.swing = random(10, 26);
+      this.swingSpeed = random(0.008, 0.016);
+      this.swingAngle = random(0, Math.PI * 2);
+      // 蓝白色樱花
+      this.color = `rgba(${Math.floor(random(170,210))},${Math.floor(random(220,240))},255,${this.opacity})`;
+    }
+    update() {
+      this.y += this.speed;
+      this.angle += this.rotateSpeed;
+      this.swingAngle += this.swingSpeed;
+      this.x += Math.sin(this.swingAngle) * 0.7;
+      if (this.y > height + 30 || this.x < -30 || this.x > width + 30) {
+        this.reset();
+        this.y = -30;
+      }
+    }
+    draw(ctx) {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.angle);
+      for (let i = 0; i < 5; i++) {
+        ctx.rotate(Math.PI * 2 / 5);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.quadraticCurveTo(this.r*0.45, -this.r*0.1, this.r*0.6, -this.r*0.8);
+        ctx.quadraticCurveTo(0, -this.r*0.7, -this.r*0.6, -this.r*0.8);
+        ctx.quadraticCurveTo(-this.r*0.45, -this.r*0.1, 0, 0);
+        ctx.closePath();
+        ctx.fillStyle = this.color;
+        ctx.shadowColor = "#c7e7ff";
+        ctx.shadowBlur = 8;
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+  }
+  let sakuras = [];
+  function createSakuras() {
+    sakuras = [];
+    for(let i=0;i<36;i++) sakuras.push(new Sakura());
+  }
+  function animate() {
+    ctx.clearRect(0,0,width,height);
+    for(let i=0;i<sakuras.length;i++) {
+      sakuras[i].update();
+      sakuras[i].draw(ctx);
+    }
+    requestAnimationFrame(animate);
+  }
+  const ctx = canvas.getContext('2d');
+  createSakuras();
+  animate();
+  window.addEventListener('resize', ()=>{
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width; canvas.height = height;
+    createSakuras();
+  });
+</script>
+
+</body>
+</html>

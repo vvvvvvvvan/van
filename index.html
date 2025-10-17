@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>van和smader的爱情小屋</title>
+  <link rel="icon" href="favicon.png" type="image/png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      min-height: 100vh;
+      font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+      overflow-x: hidden;
+      background: #a9e3fe url('blue-bg.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+    body { position: relative; }
+    .page-title-row {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 38px;
+      margin-top: 54px;
+      margin-bottom: 54px;
+      width: 100vw;
+      user-select: none;
+      pointer-events: none;
+    }
+    .avatar-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: auto;
+      user-select: auto;
+    }
+    .avatar {
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 2px 12px rgba(33,150,243,0.12);
+      border: 3px solid #fff;
+      background: #fff;
+      margin-bottom: 7px;
+    }
+    .avatar-label {
+      font-size: 1.1em;
+      color: #1976d2;
+      background: rgba(255,255,255,0.86);
+      border-radius: 10px;
+      padding: 2px 14px 2px 14px;
+      font-weight: bold;
+      margin-top: 0;
+      letter-spacing: 2px;
+      user-select: none;
+      pointer-events: none;
+    }
+    .page-title {
+      font-size: 3.2em;
+      color: #fff;
+      font-weight: bold;
+      letter-spacing: 6px;
+      line-height: 1.1;
+      text-align: center;
+      margin: 0 18px;
+      text-shadow: none;
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .main-content {
+      margin-top: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100vw;
+    }
+    .main-box {
+      background: rgba(255,255,255,0.92);
+      box-shadow: 0 4px 16px rgba(84,179,250,0.14);
+      border-radius: 20px;
+      padding: 34px 0 22px 0;
+      text-align: center;
+      z-index: 5;
+      margin-bottom: 38px;
+      width: 50vw;
+      min-width: 300px;
+      max-width: 480px;
+      border: 1.5px solid #a6d6fc;
+    }
+    .since {
+      color: #3171c9;
+      font-size: 1.1em;
+      margin-bottom: 14px;
+    }
+    .love-days {
+      font-size: 2.7em;
+      color: #1e5ed7;
+      font-weight: bold;
+      margin: 14px 0 20px 0;
+      letter-spacing: 1px;
+      text-shadow: none;
+    }
+    .quote {
+      margin: 0 0 2px 0;
+      color: #2196f3;
+      font-size: 1.21em;
+      letter-spacing: 2px;
+      font-family: 'Segoe Script','Comic Sans MS',cursive;
+      text-shadow: none;
+    }
+    .function-area {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 30px 28px;
+      width: 90vw;
+      max-width: 900px;
+      margin: 0 auto 58px auto;
+      z-index: 2;
+    }
+    .function-area a.function-card {
+      background: rgba(255,255,255,0.87);
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(84,179,250,0.11);
+      text-align: center;
+      padding: 26px 0 16px 0;
+      border: 1.5px solid #a6d6fc;
+      transition: box-shadow 0.2s, transform 0.2s;
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 1em;
+      width: 100%;
+      min-width: 0;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+    .function-area a.function-card:hover {
+      box-shadow: 0 8px 24px rgba(33,150,243,0.14);
+      transform: translateY(-3px) scale(1.03);
+    }
+    .function-card .function-icon {
+      font-size: 2em;
+      margin-bottom: 8px;
+      display: block;
+      text-shadow: none;
+    }
+    .function-card .function-title {
+      font-size: 1.1em;
+      color: #1976d2;
+      letter-spacing: 1px;
+      margin-top: 2px;
+      font-weight: 500;
+      text-shadow: none;
+    }
+    .footer {
+      margin: 50px 0 14px 0;
+      color: #1976d2;
+      text-align: center;
+      font-size: 1em;
+      letter-spacing: 1px;
+      user-select: none;
+      text-shadow: none;
+    }
+    .footer a { color: #1976d2; text-decoration: none; }
+    .footer a:visited { color: #1976d2; }
+    .footer a:hover { opacity: .85; }
+    .footer a:focus-visible { outline: 2px solid #1976d2; outline-offset: 2px; }
+
+    #sakuraCanvas {
+      position: fixed;
+      left: 0; top: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 10;
+    }
+    @media (max-width: 900px) {
+      .main-box { width: 80vw; }
+      .function-area { width: 98vw; gap: 14px 7px; }
+    }
+    @media (max-width: 600px) {
+      .page-title-row { margin-top: 18px; margin-bottom: 20px; gap: 12px;}
+      .page-title { font-size: 1.1em; margin: 0 8px; letter-spacing: 2px;}
+      .main-content { margin-top: 0;}
+      .main-box { width: 95vw; min-width: 0; padding: 18px 0 10px 0;}
+      .love-days { font-size: 1.25em;}
+      .function-area { gap: 10px 4px; }
+      .footer { margin: 32px 0 8px 0;}
+      .function-card { padding: 13px 0 8px 0;}
+      .avatar { width: 48px; height: 48px;}
+      .avatar-label { font-size: .97em; padding: 2px 10px;}
+    }
+  </style>
+</head>
+<body>
+  <canvas id="sakuraCanvas"></canvas>
+  <div class="page-title-row">
+    <div class="avatar-wrap">
+      <img class="avatar" src="A62A07FD46CF3AE4F9EA92855966E5E7.jpg" alt="van头像">
+      <div class="avatar-label">van</div>
+    </div>
+    <span class="page-title">van 和 smader 的爱情小屋</span>
+    <div class="avatar-wrap">
+      <img class="avatar" src="F0EA2A563C8A66514D51753ADA28B318.jpg" alt="smader头像">
+      <div class="avatar-label">smader</div>
+    </div>
+  </div>
+  <div class="main-content">
+    <div class="main-box">
+      <div class="since">我们在一起：2023年12月9日</div>
+      <div class="love-days" id="loveDays"></div>
+      
+    </div>
+    <div class="function-area">
+      <a class="function-card" href="./qszq.html">
+        <span class="function-icon">💌</span>
+        <div class="function-title">情书专区</div>
+      </a>
+      <a class="function-card" href="./dddd.html">
+        <span class="function-icon">🌊</span>
+        <div class="function-title">点点滴滴</div>
+      </a>
+      <a class="function-card" href="./jnjl.html">
+        <span class="function-icon">🎂</span>
+        <div class="function-title">纪念记录</div>
+      </a>
+      <a class="function-card" href="./sgxc.html">
+        <span class="function-icon">📷</span>
+        <div class="function-title">时光相册</div>
+      </a>
+      <a class="function-card" href="./aqqd.html">
+        <span class="function-icon">🧩</span>
+        <div class="function-title">爱情清单</div>
+      </a>
+      <a class="function-card" href="./gywm.html">
+        <span class="function-icon">🔗</span>
+        <div class="function-title">关于我们</div>
+      </a>
+    </div>
+  </div>
+  <div class="footer">
+    © 2025 van & smader | Love Cabin Forever 💙
+    <div style="margin-top: 6px; font-size: 0.9em; color: #1976d2;">
+    蜀ICP备2025149919号
+  </div>
+    <!-- 新增：公安备案号链接（按你给的标签） -->
+  <div style="margin-top: 4px; font-size: 0.9em; color: #1976d2;">
+    <a href="https://beian.mps.gov.cn/#/query/webSearch?code=51050202000535" rel="noreferrer" target="_blank">川公网安备51050202000535号</a>
+  </div>
+  </div>
+  <script>
+    // 计算天数
+    const start = new Date('2023-12-09T00:00:00');
+    const now = new Date();
+    const diff = now - start;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    document.getElementById('loveDays').innerText = `第 ${days} 天`;
+
+    // Sakura 蓝白花瓣飘落
+    const canvas = document.getElementById('sakuraCanvas');
+    let width = window.innerWidth, height = window.innerHeight;
+    canvas.width = width; canvas.height = height;
+    function random(min, max) { return Math.random() * (max - min) + min; }
+    class Sakura {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = random(0, width);
+        this.y = random(-50, height * 0.6);
+        this.r = random(10, 22);
+        this.angle = random(0, Math.PI * 2);
+        this.speed = random(1.1, 2.1);
+        this.rotateSpeed = random(0.007, 0.017);
+        this.opacity = random(0.6, 0.9);
+        this.swing = random(10, 26);
+        this.swingSpeed = random(0.008, 0.016);
+        this.swingAngle = random(0, Math.PI * 2);
+        // 蓝白色樱花
+        this.color = `rgba(${Math.floor(random(170,210))},${Math.floor(random(220,240))},255,${this.opacity})`;
+      }
+      update() {
+        this.y += this.speed;
+        this.angle += this.rotateSpeed;
+        this.swingAngle += this.swingSpeed;
+        this.x += Math.sin(this.swingAngle) * 0.7;
+        if (this.y > height + 30 || this.x < -30 || this.x > width + 30) {
+          this.reset();
+          this.y = -30;
+        }
+      }
+      draw(ctx) {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+        for (let i = 0; i < 5; i++) {
+          ctx.rotate(Math.PI * 2 / 5);
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.quadraticCurveTo(this.r*0.45, -this.r*0.1, this.r*0.6, -this.r*0.8);
+          ctx.quadraticCurveTo(0, -this.r*0.7, -this.r*0.6, -this.r*0.8);
+          ctx.quadraticCurveTo(-this.r*0.45, -this.r*0.1, 0, 0);
+          ctx.closePath();
+          ctx.fillStyle = this.color;
+          ctx.shadowColor = "#c7e7ff";
+          ctx.shadowBlur = 8;
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+    }
+    let sakuras = [];
+    function createSakuras() {
+      sakuras = [];
+      for(let i=0;i<36;i++) sakuras.push(new Sakura());
+    }
+    function animate() {
+      ctx.clearRect(0,0,width,height);
+      for(let i=0;i<sakuras.length;i++) {
+        sakuras[i].update();
+        sakuras[i].draw(ctx);
+      }
+      requestAnimationFrame(animate);
+    }
+    const ctx = canvas.getContext('2d');
+    createSakuras();
+    animate();
+    window.addEventListener('resize', ()=>{
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width; canvas.height = height;
+      createSakuras();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>情书专区 - van和smader的爱情小屋</title>
+  <link rel="icon" href="favicon.png" type="image/png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      min-height: 100vh;
+      font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+      overflow-x: hidden;
+      background: #a9e3fe url('blue-bg.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+    #sakuraCanvas {
+      position: fixed;
+      left: 0; top: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100vw;
+    }
+    .avatar-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 46px;
+      margin-top: 48px;
+      margin-bottom: 18px;
+    }
+    .avatar-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .avatar-img {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+      border: 2px solid #fff;
+      background: #fff;
+    }
+    .avatar-name {
+      margin-top: 7px;
+      font-size: 1.08em;
+      color: #1976d2;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    .love-heart {
+      font-size: 6em;
+      color: #fa8da1;
+      margin: 0 12px;
+    }
+    .main-box {
+      background: rgba(255,255,255,0.94);
+      box-shadow: 0 4px 16px rgba(84,179,250,0.14);
+      border-radius: 20px;
+      padding: 36px 0 30px 0;
+      text-align: center;
+      margin-bottom: 38px;
+      width: 56vw;
+      min-width: 280px;
+      max-width: 680px;
+      border: 1.5px solid #a6d6fc;
+    }
+    .title {
+      font-size: 2.2em;
+      color: #1976d2;
+      font-weight: bold;
+      letter-spacing: 4px;
+      margin-bottom: 16px;
+    }
+    .desc {
+      color: #357ec7;
+      font-size: 1.14em;
+      margin-bottom: 30px;
+      font-weight: 500;
+      letter-spacing: 1px;
+    }
+    .letter-list {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    align-items: center;
+    margin: 0 auto 18px auto;
+    width: 89%;
+    max-height: 420px;          /* 内容最多显示420px，高度可自调 */
+    overflow-y: auto;           /* 超出自动出现滚动条 */
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    }
+
+    .letter-card {
+      background: rgba(250, 252, 255, 0.94);
+      border-radius: 15px;
+      box-shadow: 0 2px 8px rgba(33,150,243,0.08);
+      border: 1.2px solid #a6d6fc;
+      padding: 26px 22px 18px 22px;
+      width: 100%;
+      max-width: 540px;
+      text-align: left;
+      position: relative;
+      transition: box-shadow 0.16s;
+    }
+    .letter-card:hover {
+      box-shadow: 0 6px 22px rgba(33,150,243,0.14);
+    }
+    .letter-title {
+      color: #1976d2;
+      font-weight: bold;
+      font-size: 1.13em;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+    }
+    .letter-date {
+      color: #89aee6;
+      font-size: 0.98em;
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+    .letter-content {
+      color: #2b3344;
+      font-size: 1.13em;
+      line-height: 2;
+      white-space: pre-line;
+    }
+    .back-home {
+      display: inline-block;
+      margin-top: 22px;
+      color: #2196f3;
+      background: rgba(255,255,255,0.89);
+      padding: 8px 28px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-size: 1.13em;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(84,179,250,0.08);
+      border: 1px solid #a6d6fc;
+      transition: background 0.18s;
+    }
+    .back-home:hover {
+      background: #e6f5ff;
+    }
+    @media (max-width: 900px) {
+      .main-box { width: 94vw; }
+      .letter-list { width: 98%; }
+    }
+    @media (max-width: 600px) {
+      .main-box { width: 99vw; min-width: 0; padding: 13px 0 14px 0;}
+      .title { font-size: 1.2em;}
+      .desc { font-size: 0.97em;}
+      .avatar-img { width: 42px; height: 42px;}
+      .avatar-row { gap: 10px; margin-top: 20px;}
+      .letter-list { width: 99%; gap: 14px;}
+      .letter-card { font-size: 0.97em; padding: 13px 7px 11px 7px;}
+      .back-home { font-size: 0.97em; padding: 7px 12px; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="sakuraCanvas"></canvas>
+  <div class="main-content">
+    <div class="avatar-row">
+      <div class="avatar-block">
+        <img class="avatar-img" src="A62A07FD46CF3AE4F9EA92855966E5E7.jpg" alt="van头像">
+        <div class="avatar-name">van</div>
+      </div>
+      <span class="love-heart">♥</span>
+      <div class="avatar-block">
+        <img class="avatar-img" src="F0EA2A563C8A66514D51753ADA28B318.jpg" alt="smader头像">
+        <div class="avatar-name">smader</div>
+      </div>
+    </div>
+    <div class="main-box">
+      <div class="title">情书专区</div>
+      <div class="desc">时间，大海和蓝色的你</div>
+      <div class="letter-list">
+        <div class="letter-card">
+          <div class="letter-title">To smader</div>
+          <div class="letter-date">2025.7.04</div>
+          <div class="letter-content">
+            不见方三日，世上满樱花
+          </div>
+        </div>
+        <div class="letter-card">
+          <div class="letter-title">To van</div>
+          <div class="letter-date">2024.4.22</div>
+          <div class="letter-content">
+            宝宝，生日快乐
+            今天是我们在一起的第135天
+            也是我陪你度过的第一个生日
+            我喜欢你，所以希望你被簇拥包围，所以你走的路要繁花盛开，要人声鼎沸。
+            希望我们都能像对方一样勇敢
+            前途与玫瑰
+            来日与方长
+            我爱你
+          </div>
+        </div>
+        <div class="letter-card">
+          <div class="letter-title">To van</div>
+          <div class="letter-date">2024.4.22</div>
+          <div class="letter-content">
+            如果温柔是一片湖，我更希望你是自由的海洋。生日快乐，宝宝。祝你前路光明，我们来日方长。
+          </div>
+        </div>
+        <div class="letter-card">
+          <div class="letter-title">To smader</div>
+          <div class="letter-date">2024.3.18</div>
+          <div class="letter-content">
+            Your eyes, they shine so bright, I wannna save that light.
+          </div>
+        </div>
+        <div class="letter-card">
+          <div class="letter-title">To van</div>
+          <div class="letter-date">2024.10.30</div>
+          <div class="letter-content">
+            宝宝酱，喜欢我的宝宝，超级无敌爆炸喜欢我的宝宝，爱我的宝宝。宝宝宝宝，有的事，好像只有爱上一个人的时候才能明白。咳咳。爱宝宝，所以总是想跟宝宝待在一起。
+          </div>
+        </div>
+        <div class="letter-card">
+          <div class="letter-title">To smader</div>
+          <div class="letter-date">2024.2.10</div>
+          <div class="letter-content">
+            这是我第一次和你说新年快乐，我不说恭喜发财，也不说前程似锦。我希望你在新的一年里平平安安，快快乐乐。愿你成为自己的小太阳.
+          </div>
+        </div>
+        <div class="letter-card">
+          <div class="letter-title">To van</div>
+          <div class="letter-date">2024.2.10</div>
+          <div class="letter-content">
+            希望van同学在新的一年里心想事成，万事如意，happy everyday。开心最重要啦，当然，发财也很重要，新的一年要财运滚滚。这是我们一起度过的第一个新年，希望还有下一个下一个再下一个新年可以一起。爱你呦
+          </div>
+        </div>
+        <div class="letter-card">
+          <div class="letter-title">To smader</div>
+          <div class="letter-date">2024.01.19</div>
+          <div class="letter-content">
+            死生契阔，与子成说，执子之手，与子偕老
+          </div>
+        </div>
+        <div class="letter-card">
+          <div class="letter-title">To van</div>
+          <div class="letter-date">2023.12.17</div>
+          <div class="letter-content">
+            Maybe there are five thousand flowers like you in the world, but only you are my unique rose.
+          </div>
+        </div>
+      </div>
+      <a class="back-home" href="./index.html">返回首页</a>
+    </div>
+  </div>
+</body>
+
+     
+  <script>
+    // Sakura 蓝白花瓣飘落特效
+    const canvas = document.getElementById('sakuraCanvas');
+    let width = window.innerWidth, height = window.innerHeight;
+    canvas.width = width; canvas.height = height;
+    function random(min, max) { return Math.random() * (max - min) + min; }
+    class Sakura {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = random(0, width);
+        this.y = random(-50, height * 0.6);
+        this.r = random(6, 14);
+        this.angle = random(0, Math.PI * 2);
+        this.speed = random(1.1, 2.1);
+        this.rotateSpeed = random(0.007, 0.017);
+        this.opacity = random(0.6, 0.9);
+        this.swing = random(10, 26);
+        this.swingSpeed = random(0.008, 0.016);
+        this.swingAngle = random(0, Math.PI * 2);
+        // 蓝白色樱花
+        this.color = `rgba(${Math.floor(random(170,210))},${Math.floor(random(220,240))},255,${this.opacity})`;
+      }
+      update() {
+        this.y += this.speed;
+        this.angle += this.rotateSpeed;
+        this.swingAngle += this.swingSpeed;
+        this.x += Math.sin(this.swingAngle) * 0.7;
+        if (this.y > height + 30 || this.x < -30 || this.x > width + 30) {
+          this.reset();
+          this.y = -30;
+        }
+      }
+      draw(ctx) {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+        for (let i = 0; i < 5; i++) {
+          ctx.rotate(Math.PI * 2 / 5);
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.quadraticCurveTo(this.r*0.45, -this.r*0.1, this.r*0.6, -this.r*0.8);
+          ctx.quadraticCurveTo(0, -this.r*0.7, -this.r*0.6, -this.r*0.8);
+          ctx.quadraticCurveTo(-this.r*0.45, -this.r*0.1, 0, 0);
+          ctx.closePath();
+          ctx.fillStyle = this.color;
+          ctx.shadowColor = "#c7e7ff";
+          ctx.shadowBlur = 8;
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+    }
+    let sakuras = [];
+    function createSakuras() {
+      sakuras = [];
+      for(let i=0;i<36;i++) sakuras.push(new Sakura());
+    }
+    function animate() {
+      ctx.clearRect(0,0,width,height);
+      for(let i=0;i<sakuras.length;i++) {
+        sakuras[i].update();
+        sakuras[i].draw(ctx);
+      }
+      requestAnimationFrame(animate);
+    }
+    const ctx = canvas.getContext('2d');
+    createSakuras();
+    animate();
+    window.addEventListener('resize', ()=>{
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width; canvas.height = height;
+      createSakuras();
+    });
+  </script>
+</body>
+</html>

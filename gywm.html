@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>关于我们 - van和smader的爱情小屋</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            min-height: 100vh;
+            font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+            overflow-x: hidden;
+            background: #a9e3fe url('blue-bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100vw;
+        }
+        .main-box {
+        background: rgba(255,255,255,0.95);
+        box-shadow: 0 4px 16px rgba(84,179,250,0.14);
+        border-radius: 20px;
+        padding: 38px 0 34px 0;
+        text-align: center;
+        margin-top: 42px;
+        margin-bottom: 38px;
+        width: 80vw;           /* 从48vw加大到80vw，内容盒子更宽 */
+        min-width: 290px;
+        max-width: 800px;      /* 最大宽度也增大了 */
+        border: 1.5px solid #a6d6fc;
+        }
+        .avatar-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 46px;
+            margin-bottom: 26px;
+        }
+        .avatar-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .avatar-img {
+            width: 86px;
+            height: 86px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.16);
+            border: 2px solid #fff;
+            background: #fff;
+        }
+        .avatar-name {
+            margin-top: 9px;
+            font-size: 1.07em;
+            color: #1976d2;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .love-heart {
+            font-size: 6.0em;
+            color: #fa8da1;
+            margin: 0 14px;
+        }
+        .title {
+            font-size: 2em;
+            color: #1976d2;
+            font-weight: bold;
+            letter-spacing: 4px;
+            margin-bottom: 18px;
+        }
+        .desc {
+            color: #357ec7;
+            font-size: 1.2em;
+            margin-bottom: 18px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+        .section-title {
+            font-size: 1.1em;
+            color: #2196f3;
+            font-weight: bold;
+            margin-top: 24px;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        .text {
+            color: #333d4d;
+            font-size: 1.09em;
+            line-height: 1.85;
+            margin: 0 0 12px 0;
+            text-align: center;
+            padding: 0 32px;
+        }
+        .back-home {
+            display: inline-block;
+            margin-top: 18px;
+            color: #2196f3;
+            background: rgba(255,255,255,0.89);
+            padding: 8px 28px;
+            border-radius: 14px;
+            text-decoration: none;
+            font-size: 1.15em;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(84,179,250,0.08);
+            border: 1px solid #a6d6fc;
+            transition: background 0.18s;
+        }
+        .back-home:hover {
+            background: #e6f5ff;
+        }
+        @media (max-width: 900px) {
+            .main-box { width: 84vw; }
+        }
+        @media (max-width: 600px) {
+            .main-box { width: 99vw; min-width: 0; padding: 13px 0 14px 0;}
+            .title { font-size: 1.3em;}
+            .desc { font-size: 0.98em;}
+            .text { font-size: 0.97em; padding: 0 10px;}
+            .avatar-img { width: 54px; height: 54px;}
+            .avatar-row { gap: 18px;}
+            .back-home { font-size: 1em; padding: 7px 12px; }
+        }
+        #sakuraCanvas {
+        position: fixed;
+        left: 0; top: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 10;
+        }
+        .desc > div {
+  margin-bottom: 14px;  /* 调整数字可控制间距大小 */
+}
+.desc > div:last-child {
+  margin-bottom: 0;
+}
+    </style>
+</head>
+<body>
+    <canvas id="sakuraCanvas"></canvas>
+    <div class="main-content">
+        <div class="main-box">
+            <div class="avatar-row">
+                <div class="avatar-block">
+                    <img class="avatar-img" src="A62A07FD46CF3AE4F9EA92855966E5E7.jpg" alt="van头像">
+                    <div class="avatar-name">van</div>
+                </div>
+                <span class="love-heart">♥</span>
+                <div class="avatar-block">
+                    <img class="avatar-img" src="F0EA2A563C8A66514D51753ADA28B318.jpg" alt="smader头像">
+                    <div class="avatar-name">smader</div>
+                </div>
+            </div>
+            <div class="title">关于我们</div>
+            <div class="desc">
+  <div>van:一款超级可爱的金毛小狗!</div>
+  <div>smader:邪恶的耶耶，微笑恶魔型！</div>
+</div>
+            <div class="section-title">我们的故事</div>
+            <div class="text">
+                二三年的秋天，我们在一座美丽的城市相遇。
+            </div>
+            <div class="section-title">小约定</div>
+            <div class="text">
+                1. 永远好好沟通，不冷战<br>
+                2. 纪念日和重要时刻一起庆祝<br>
+                3. 一起去更多地方，记录点点滴滴<br>
+            </div>
+            <a class="back-home" href="./index.html">返回首页</a>
+        </div>
+    </div>
+ <script>
+  // Sakura 蓝白花瓣飘落
+  const canvas = document.getElementById('sakuraCanvas');
+  let width = window.innerWidth, height = window.innerHeight;
+  canvas.width = width; canvas.height = height;
+  function random(min, max) { return Math.random() * (max - min) + min; }
+  class Sakura {
+    constructor() { this.reset(); }
+    reset() {
+      this.x = random(0, width);
+      this.y = random(-50, height * 0.6);
+      this.r = random(6, 14);
+      this.angle = random(0, Math.PI * 2);
+      this.speed = random(1.1, 2.1);
+      this.rotateSpeed = random(0.007, 0.017);
+      this.opacity = random(0.6, 0.9);
+      this.swing = random(10, 26);
+      this.swingSpeed = random(0.008, 0.016);
+      this.swingAngle = random(0, Math.PI * 2);
+      // 蓝白色樱花
+      this.color = `rgba(${Math.floor(random(170,210))},${Math.floor(random(220,240))},255,${this.opacity})`;
+    }
+    update() {
+      this.y += this.speed;
+      this.angle += this.rotateSpeed;
+      this.swingAngle += this.swingSpeed;
+      this.x += Math.sin(this.swingAngle) * 0.7;
+      if (this.y > height + 30 || this.x < -30 || this.x > width + 30) {
+        this.reset();
+        this.y = -30;
+      }
+    }
+    draw(ctx) {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.angle);
+      for (let i = 0; i < 5; i++) {
+        ctx.rotate(Math.PI * 2 / 5);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.quadraticCurveTo(this.r*0.45, -this.r*0.1, this.r*0.6, -this.r*0.8);
+        ctx.quadraticCurveTo(0, -this.r*0.7, -this.r*0.6, -this.r*0.8);
+        ctx.quadraticCurveTo(-this.r*0.45, -this.r*0.1, 0, 0);
+        ctx.closePath();
+        ctx.fillStyle = this.color;
+        ctx.shadowColor = "#c7e7ff";
+        ctx.shadowBlur = 8;
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+  }
+  let sakuras = [];
+  function createSakuras() {
+    sakuras = [];
+    for(let i=0;i<36;i++) sakuras.push(new Sakura());
+  }
+  function animate() {
+    ctx.clearRect(0,0,width,height);
+    for(let i=0;i<sakuras.length;i++) {
+      sakuras[i].update();
+      sakuras[i].draw(ctx);
+    }
+    requestAnimationFrame(animate);
+  }
+  const ctx = canvas.getContext('2d');
+  createSakuras();
+  animate();
+  window.addEventListener('resize', ()=>{
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width; canvas.height = height;
+    createSakuras();
+  });
+</script> 
+</body>
+</html>

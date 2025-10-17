@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<link rel="icon" href="favicon.png" type="image/png">
+<title>我们的爱情清单</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      min-height: 100vh;
+      font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+      overflow-x: hidden;
+      background: #a9e3fe url('blue-bg.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+    body { position: relative; }
+    .main-content {
+      margin-top: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100vw;
+    }
+    .main-box {
+      background: rgba(255,255,255,0.95);
+      box-shadow: 0 4px 16px rgba(84,179,250,0.14);
+      border-radius: 20px;
+      padding: 34px 0 30px 0;
+      text-align: center;
+      z-index: 5;
+      margin-top: 40px;
+      margin-bottom: 38px;
+      width: 50vw;
+      min-width: 300px;
+      max-width: 520px;
+      border: 1.5px solid #a6d6fc;
+    }
+    .love-title {
+      font-size: 2em;
+      font-weight: bold;
+      color: #1976d2;
+      letter-spacing: 4px;
+      margin-bottom: 8px;
+    }
+    .love-tip {
+      font-size: 1.1em;
+      color: #2c6ed5;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
+    .progress-wrap {
+      width: 92%;
+      margin: 0 auto 18px auto;
+      text-align: left;
+    }
+    .progress-text {
+      color: #195cab;
+      font-size: 1em;
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .progress-bar {
+      background: #e0f1ff;
+      border-radius: 16px;
+      height: 15px;
+      width: 100%;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .progress-inner {
+      background: linear-gradient(90deg, #51bbfe 0%, #1e90ff 100%);
+      height: 100%;
+      border-radius: 16px;
+      transition: width 0.5s;
+    }
+    ul.love-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 auto;
+      width: 92%;
+      max-height: 390px;
+      overflow-y: auto;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+    ul.love-list::-webkit-scrollbar {
+      width: 7px;
+      background: #e0f1ff;
+      border-radius: 8px;
+    }
+    ul.love-list::-webkit-scrollbar-thumb {
+      background: #b3d9fa;
+      border-radius: 8px;
+    }
+    ul.love-list li {
+      background: rgba(247,250,255,0.85);
+      margin: 11px 0;
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 18px;
+      box-shadow: 0 2px 8px rgba(84,179,250,0.09);
+      font-size: 1.13em;
+      transition: background 0.2s;
+      border: 1.2px solid #a6d6fc;
+      position: relative;
+    }
+    ul.love-list li.done {
+      background: rgba(210,244,219,0.82);
+      color: #249f36;
+      text-decoration: line-through;
+      opacity: 0.8;
+      transition: background 0.2s, color 0.2s;
+    }
+    .toggle-btn {
+      border: none;
+      outline: none;
+      background: #1976d2;
+      color: #fff;
+      font-size: 1em;
+      padding: 7px 18px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      font-weight: bold;
+      margin-left: 18px;
+      box-shadow: 0 2px 6px rgba(33,150,243,0.10);
+    }
+    .toggle-btn:hover {
+      background: #1e90ff;
+    }
+    @media (max-width: 900px) {
+      .main-box { width: 84vw; }
+      ul.love-list { width: 98%; }
+    }
+    @media (max-width: 600px) {
+      .main-box { width: 98vw; min-width: 0; padding: 13px 0 14px 0;}
+      .love-title { font-size: 1.2em;}
+      .love-tip { font-size: 0.99em;}
+      .progress-text { font-size: 0.97em;}
+      ul.love-list { max-height: 170px; }
+      ul.love-list li { font-size: 0.97em; padding: 11px 7px; }
+      .toggle-btn { font-size: .93em; padding: 6px 11px; margin-left: 8px;}
+    }
+    #sakuraCanvas {
+      position: fixed;
+      left: 0; top: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 10;
+    }
+  
+.back-arrow {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 28px;
+  color: white;
+  text-decoration: none;
+  z-index: 20;
+  font-weight: bold;
+}
+.back-arrow:hover {
+  opacity: 0.75;
+}
+
+.avatar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 36px;
+  margin-top: 25px;
+}
+.avatar-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+}
+.avatar-img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.avatar-name {
+  margin-top: 8px;
+  font-size: 1em;
+  color: white;
+  font-weight: bold;
+  text-shadow: 0 0 4px rgba(0,0,0,0.3);
+}
+
+.love-title-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.avatar-inline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+}
+.avatar-img-inline {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.avatar-name-inline {
+  font-size: 0.9em;
+  color: rgb(92, 148, 217);
+  font-weight: bold;
+  margin-top: 4px;
+  text-shadow: 0 0 4px rgba(0,0,0,0.3);
+}
+</style>
+</head>
+<body><a class="back-arrow" href="index.html">←</a>
+<canvas id="sakuraCanvas"></canvas>
+<div class="main-content">
+
+<div class="main-box">
+
+<div class="love-title-wrapper">
+<a class="avatar-inline" href="index.html">
+<img alt="van" class="avatar-img-inline" src="A62A07FD46CF3AE4F9EA92855966E5E7.jpg"/>
+<div class="avatar-name-inline">van</div>
+</a>
+<div class="love-title">我们的爱情清单</div>
+<a class="avatar-inline" href="index.html">
+<img alt="smader" class="avatar-img-inline" src="./F0EA2A563C8A66514D51753ADA28B318.jpg"/>
+<div class="avatar-name-inline">smader</div>
+</a>
+</div>
+
+<div class="love-tip">除了这些以外，还有好多好多事情想和你一起做</div>
+<div class="progress-wrap">
+<div class="progress-text" id="progress-text">已完成 0 / 0</div>
+<div class="progress-bar">
+<div class="progress-inner" id="progress-inner" style="width: 0%;"></div>
+</div>
+</div>
+<ul class="love-list" id="love-list">
+<!-- 动态插入清单项 -->
+</ul>
+</div>
+</div>
+<script>
+  // 樱花飘落
+  const canvas = document.getElementById('sakuraCanvas');
+  let width = window.innerWidth, height = window.innerHeight;
+  canvas.width = width; canvas.height = height;
+  function random(min, max) { return Math.random() * (max - min) + min; }
+  class Sakura {
+    constructor() { this.reset(); }
+    reset() {
+      this.x = random(0, width);
+      this.y = random(-50, height * 0.6);
+      this.r = random(6, 14);
+      this.angle = random(0, Math.PI * 2);
+      this.speed = random(1.1, 2.1);
+      this.rotateSpeed = random(0.007, 0.017);
+      this.opacity = random(0.6, 0.9);
+      this.swing = random(10, 26);
+      this.swingSpeed = random(0.008, 0.016);
+      this.swingAngle = random(0, Math.PI * 2);
+      this.color = `rgba(${Math.floor(random(170,210))},${Math.floor(random(220,240))},255,${this.opacity})`;
+    }
+    update() {
+      this.y += this.speed;
+      this.angle += this.rotateSpeed;
+      this.swingAngle += this.swingSpeed;
+      this.x += Math.sin(this.swingAngle) * 0.7;
+      if (this.y > height + 30 || this.x < -30 || this.x > width + 30) {
+        this.reset();
+        this.y = -30;
+      }
+    }
+    draw(ctx) {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.angle);
+      for (let i = 0; i < 5; i++) {
+        ctx.rotate(Math.PI * 2 / 5);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.quadraticCurveTo(this.r*0.45, -this.r*0.1, this.r*0.6, -this.r*0.8);
+        ctx.quadraticCurveTo(0, -this.r*0.7, -this.r*0.6, -this.r*0.8);
+        ctx.quadraticCurveTo(-this.r*0.45, -this.r*0.1, 0, 0);
+        ctx.closePath();
+        ctx.fillStyle = this.color;
+        ctx.shadowColor = "#c7e7ff";
+        ctx.shadowBlur = 8;
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+  }
+  let sakuras = [];
+  function createSakuras() {
+    sakuras = [];
+    for(let i=0;i<36;i++) sakuras.push(new Sakura());
+  }
+  function animate() {
+    ctx.clearRect(0,0,width,height);
+    for(let i=0;i<sakuras.length;i++) {
+      sakuras[i].update();
+      sakuras[i].draw(ctx);
+    }
+    requestAnimationFrame(animate);
+  }
+  const ctx = canvas.getContext('2d');
+  createSakuras();
+  animate();
+  window.addEventListener('resize', ()=>{
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width; canvas.height = height;
+    createSakuras();
+  });
+
+
+  const loveListData = [
+    {"text": "一起看日出", "done": true},
+    {"text": "一起在海边散步", "done": true},
+    {"text": "一起看日落", "done": true},
+    {"text": "一起看一场流星雨", "done": false},
+    {"text": "一起养一盆绿植", "done": false},
+    {"text": "一起逛博物馆", "done": true},
+    {"text": "一起做志愿者", "done": true},
+    {"text": "一起学习新语言", "done": false},
+    {"text": "一起看一场话剧", "done": false},
+    {"text": "一起去植物园赏花", "done": false},
+    {"text": "一起制作手工礼物", "done": true},
+    {"text": "一起挑战密室逃脱", "done": false},
+    {"text": "一起学习摄影技巧", "done": false},
+    {"text": "一起去户外烧烤", "done": false},
+    {"text": "一起滑雪", "done": false},
+    {"text": "一起放风筝", "done": true},
+    {"text": "一起制作情侣相册", "done": true},
+    {"text": "一起体验潜水", "done": false},
+    {"text": "一起学习乐器", "done": false},
+    {"text": "一起去天文台观星", "done": false},
+    {"text": "一起参加音乐节", "done": false},
+    {"text": "一起爬长城", "done": false},
+    {"text": "一起挑战户外徒步", "done": true},
+    {"text": "一起烘培糕点", "done": false},
+    {"text": "一起体验热气球之旅", "done": false},
+    {"text": "一起制作情侣对戒", "done": true},
+    {"text": "一起玩卡丁车", "done": false},
+    {"text": "一起学习书法", "done": false},
+    {"text": "一起参加户外骑行", "done": true},
+    {"text": "一起抓娃娃", "done": true},
+    {"text": "一起体验冲浪", "done": false},
+    {"text": "一起插花", "done": false},
+    {"text": "一起去寺庙", "done": true},
+    {"text": "一起玩鬼屋", "done": true},
+    {"text": "打一场枕头大战", "done": false},
+    {"text": "一起去漂流", "done": false},
+    {"text": "一起去天安门看国旗", "done": false},
+    {"text": "一起吃烛光晚餐", "done": true},
+    {"text": "一起泡温泉", "done": false},
+    {"text": "一起制作情侣手链", "done": false},
+    {"text": "一起刮彩票", "done": true},
+    {"text": "一起户外露营", "done": false},
+    {"text": "一起坐一次随机公交", "done": false},
+    {"text": "一起去脱口秀", "done": false},
+    {"text": "一起划船", "done": false},
+    {"text": "一起放孔明灯", "done": false},
+    {"text": "一起去网吧", "done": true},
+    {"text": "为对方按摩", "done": true},
+    {"text": "一起去法院听公开案", "done": false},
+    {"text": "一起体验滑翔伞", "done": false},
+    {"text": "一起做情侣瑜伽", "done": false},
+    {"text": "一起敷面膜", "done": false},
+    {"text": "一起玩过山车", "done": true},
+    {"text": "一起逛公园", "done": true},
+    {"text": "一起去酒吧", "done": false},
+    {"text": "为对方调一杯酒", "done": true},
+    {"text": "给对方化妆", "done": false},
+    {"text": "一起探访深夜小吃", "done": true},
+    {"text": "一起自驾周边古镇", "done": false},
+    {"text": "一起坐轮渡", "done": true},
+    {"text": "一起穿情侣装", "done": true},
+    {"text": "唱歌给对方听", "done": true},
+    {"text": "一起看足球比赛", "done": true},
+    {"text": "一起拼乐高", "done": false},
+    {"text": "一起调香水", "done": false},
+    {"text": "一起游泳", "done": false},
+    {"text": "一起庆祝纪念日", "done": true},
+    {"text": "一起聊八卦", "done": true},
+    {"text": "一起跨年", "done": true},
+    {"text": "一起放烟花", "done": false},
+    {"text": "一起养一只宠物", "done": false},
+    {"text": "一起坐摩天轮", "done": false},
+    {"text": "一起看书", "done": true},
+    {"text": "一起用情侣手机壳", "done": true},
+    {"text": "一起打扑克", "done": true},
+    {"text": "一起去一次教堂", "done": false},
+    {"text": "去对方学校看看", "done": false},
+    {"text": "偷偷买对方喜欢但又舍不得的东西", "done": true},
+    {"text": "一起看樱花", "done": false},
+    {"text": "一起画一组情头", "done": false},
+    {"text": "一起通关一个双人游戏", "done": false},
+    {"text": "一起做早餐", "done": false},
+    {"text": "一起看雪", "done": false},
+    {"text": "去对方家所在的城市", "done": false},
+    {"text": "一起摘樱桃", "done": false},
+    {"text": "一起大扫除", "done": false},
+    {"text": "一起追一部剧", "done": true},
+    {"text": "一起创建一个共享歌单", "done": true},
+    {"text": "一起看电影", "done": true},
+    {"text": "一起逛家具店", "done": true},
+    {"text": "一起听歌", "done": true},
+    {"text": "一起逛超市", "done": true},
+    {"text": "一起打高尔夫", "done": true},
+    {"text": "给对方吹头发", "done": true},
+    {"text": "一起打台球", "done": true},
+    {"text": "给对方送花", "done": true},
+    {"text": "一起跑步", "done": true},
+    {"text": "一起晚饭后散步", "done": true},
+    {"text": "一起吃火锅", "done": true},
+    {"text": "一起做一个网站", "done": true},
+  ];
+
+  // 本地存储键
+  const STORAGE_KEY = "love_list_status_v1_5";
+  function loadStatus() {
+    try {
+      const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      if (data && Array.isArray(data) && data.length === loveListData.length) {
+        return data;
+      }
+    } catch(e){}
+    return loveListData.map(x => x.done);
+  }
+  function saveStatus(statusArr) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(statusArr));
+  }
+
+  function renderList() {
+    const list = document.getElementById('love-list');
+    list.innerHTML = '';
+    const statusArr = loadStatus();
+    let doneCount = 0;
+    for (let i = 0; i < loveListData.length; i++) {
+      if (statusArr[i]) doneCount++;
+      const li = document.createElement('li');
+      li.className = statusArr[i] ? 'done' : '';
+      li.innerHTML = `
+        <span>${loveListData[i].text}</span>
+        <button class="toggle-btn">${statusArr[i] ? '已完成' : '未完成'}</button>
+      `;
+      li.querySelector('.toggle-btn').onclick = () => {
+        statusArr[i] = !statusArr[i];
+        saveStatus(statusArr);
+        renderList();
+      }
+      list.appendChild(li);
+    }
+    document.getElementById('progress-text').innerText = `已完成 ${doneCount} / ${loveListData.length}`;
+    document.getElementById('progress-inner').style.width = loveListData.length === 0 ? "0%" : `${100*doneCount/loveListData.length}%`;
+  }
+
+  renderList();
+</script>
+</body>
+</html>
